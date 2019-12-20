@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <title>Hello world</title>
+   </head>
+   <script src="../socket.io/socket.io.js"></script>
+
+   <script>
+      var socket = io();
+      socket.on('message', function(data){
+	 console.log(data);
+	 data = data.author+': '+data.text;
+         document.getElementById('chat').innerHTML += data;
+      });
+      function sendMessage(){
+         const author = document.getElementById("user").value;
+         const text = document.getElementById("text").value;
+         socket.emit('send', {author, text});
+      }
+   </script>
+   <body>
+      <input id='user' type="text" placeholder="User:" />
+      <input id='text' type="text" placeholder="Text:" height="100"/>
+      <button onClick='sendMessage()'>send</button>
+
+      <div id='chat'></div>
+   </body>
+</html>
