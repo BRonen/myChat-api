@@ -1,0 +1,77 @@
+body {
+  background-color: #333;
+  border-left: 2px solid #1a1a1a;
+  border-bottom: 3px solid #151515;
+  border-right: 1px solid #1d1d1d;
+  border-top: 1px solid #1a1a1a;
+  border-radius: 10px;
+  padding: 10px;
+  padding-bottom: 0px;
+}
+.mssg {
+    padding: 5px;
+    font-size: 100%;
+    color: #41aa47;
+    background-color: #222;
+    border: 2px solid #111;
+    border-radius: 15px;
+    white-space: pre-wrap;
+    //word-break: break-word;
+    word-wrap: break-word;
+}
+.content-box {
+    padding: 10px;
+    box-sizing: border-box;
+    height:100%;
+    margin-bottom: 10px;
+    background-color: #292929;
+    border-left: 2px solid #1a1a1a;
+    border-bottom: 3px solid #151515;
+    border-right: 1px solid #1d1d1d;
+    border-top: 1px solid #1a1a1a;
+    border-radius: 10px;
+    max-height: 55vh;
+    overflow: auto;
+}
+::-webkit-scrollbar {
+    width: 3px;
+    background-color: #222;
+}
+::-webkit-scrollbar-thumb {
+    background-color: #333;
+}
+::-webkit-scrollbar-button{
+    background-color: #0000;
+}
+button {
+    display: block;
+    margin: auto;
+    font-size:120%;
+    background-color: #111;
+    padding: 10px 45px;
+    border-radius: 5px;
+    cursor: pointer;
+    color: #4a4;
+    border: none;
+    outline: none;
+    box-shadow: 1px 2px #000;
+    font-weight: bold;
+}
+button:hover {
+    background-color: #202020;
+}
+.message-input{
+    font-size: 120%;
+    color: #4a4;
+    padding: 10px 10px 10px;
+    border: 1px solid #cecece;
+    background-color: #555;
+    border-radius: 5px;
+    margin-bottom:10px;
+    box-sizing: border-box;
+    width: 100%;
+}
+.sender textarea{
+    font-size: 140%;
+    height: 70px;
+}

@@ -2,15 +2,15 @@
 <html>
    <head>
       <title>Hello world</title>
-   </head>
-   <script src="../socket.io/socket.io.js"></script>
+      <link rel="stylesheet" type="text/css" href="styles.css"/>
 
+   <script src="../socket.io/socket.io.js"></script>
    <script>
       var socket = io();
       socket.on('message', function(data){
 	 console.log(data);
-	 data = data.author+': '+data.text;
-         document.getElementById('chat').innerHTML += data;
+	 var a = '<p class="mssg">'+data.author+': '+data.text+'</p>';
+         document.getElementById('chat').innerHTML += a;
       });
       function sendMessage(){
          const author = document.getElementById("user").value;
@@ -18,11 +18,17 @@
          socket.emit('send', {author, text});
       }
    </script>
+   
+   </head>
    <body>
-      <input id='user' type="text" placeholder="User:" />
-      <input id='text' type="text" placeholder="Text:" height="100"/>
-      <button onClick='sendMessage()'>send</button>
+      <div id='chat' class='content-box'></div>
 
-      <div id='chat'></div>
+      <div class='sender content-box'>
+          <input class='message-input' id='user' type="text" placeholder="User:" />
+          
+          <textarea class='message-input' id='text' type="text" placeholder="Text:"></textarea>
+          
+          <button onClick='sendMessage()'>send</button>
+      </div>
    </body>
 </html>

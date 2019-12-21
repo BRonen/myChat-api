@@ -8,15 +8,15 @@ const io = require('socket.io')(server);
 app.use(express.json());
 app.use(cors());
 
-app.get( '/', function(req, res) {
-   res.sendFile(path.join(__dirname + '/../public/index.html'));
-});
+app.use(express.static('public'));
 
 app.get( '/test', () => res.json({'server': 'running'}) );
 
+var messages = [];
 var clients = 0;
 io.on('connection', function(socket) {
    clients++;
+   messages.map(msg => socket.emit('message', msg));
    console.log(clients);
 
    socket.on('disconnect', function () {
@@ -26,6 +26,7 @@ io.on('connection', function(socket) {
    });
 
    socket.on('send', (data) => {
+      messages.push(data);
       console.log(`${data.author}: ${data.text}`);
       io.sockets.send({'text': data.text, 'author':data.author});
    });
