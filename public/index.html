@@ -16,14 +16,14 @@
 
    <script src="../socket.io/socket.io.js"></script>
    <script>
-      var socket = io();
+      const socket = io();
       var Groom = "default";
       function getIn(){
          var room = document.getElementById('room').value || "default";
          document.getElementById('name').innerHTML = room;
          document.getElementById('chat').innerHTML += '<center><p class="mssg">server: now you are on '+room+'</p></center>';
          Groom = room;
-         socket.emit('get', room)
+         socket.emit('get', room);
       }
       
       socket.on('message', function(data){
@@ -37,9 +37,14 @@
             document.getElementById('chat').innerHTML += a;
          }
       });
+      
       socket.on('clear', function(){
          document.getElementById('chat').innerHTML = '<center><h1 class="mssg" id="name">Room: '+Groom+'</h1></center>';
          document.getElementById('chat').innerHTML += '<center><p class="mssg">Server: This chat have been cleared</p></center>';
+      });
+      
+      socket.on('counter', function(clients){
+         document.getElementById('name').innerHTML = 'Room: '+Groom+' - '+clients+' online';
       });
       
       function sendMessage(){
@@ -67,6 +72,8 @@
       </div>
       
       <div class='rooms content-box'>
+         <div id='room-list'>
+         </div>
          <input class='message-input' id='room' type="text" placeholder="Channel:" />
          <button onClick='getIn()'>Join</button>
       </div>
