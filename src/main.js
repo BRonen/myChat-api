@@ -12,25 +12,83 @@ app.use(express.static('public'));
 
 app.get( '/test', () => res.json({'server': 'running'}) );
 
-var messages = [];
 var clients = 0;
-io.on('connection', function(socket) {
-   clients++;
-   messages.map(msg => socket.emit('message', msg));
-   console.log(clients);
+var messages = {};
 
+io.on('connection', function(socket) {
+
+   //test
+   
+   socket.emit('test', 'ok');
+   
+   //couter
+   
+   clients++;
+   const tag = clients;
+   io.sockets.emit('counter', clients);
+   console.log(clients);
+   
+   //default room
+   
+   var room = "default";
+   socket.join(room);
+
+   //send all cached messages of the room
+
+   if(!messages[room]){
+      messages[room] = [];
+   }else{
+      messages[room].map(msg => socket.emit('message', msg));
+   }
+   
+   //disconnect
+   
    socket.on('disconnect', function () {
       clients--;
       console.log(clients);
-      socket.broadcast.emit('test', clients);
+      io.sockets.emit('counter', clients);
    });
-
+   
+   //get in a room
+   
+   socket.on('get', function(nRoom){
+      socket.leave(room);
+      socket.emit('clear')
+      room = nRoom;
+      socket.join(nRoom);
+      if(!messages[room]){
+         messages[room] = [];
+      }else{
+         messages[room].map(msg => socket.emit('message', msg));
+      }
+   });
+   
+   //receive messages
+	
    socket.on('send', (data) => {
-      messages.push(data);
-      console.log(`${data.author}: ${data.text}`);
-      io.sockets.send({'text': data.text, 'author':data.author});
+      if(!data.author){ data.author = 'Guest'+tag; }
+      
+      if(data.author !== 'admin'){
+         if(!messages[room]){
+            messages[room] = [];
+         }      
+         
+         messages[room].push(data);
+
+         io.to(room).send({'text': data.text, 'author':data.author});
+         
+      }if(data.text == 'clear' && data.author == 'admin'){
+         messages = [];
+         io.sockets.emit('clear');
+         
+      }if(data.text == 'date' && data.author == 'admin'){
+         socket.emit('message', {'text': Date(), 'author': 'server'});
+         
+      }if(data.text == 'count' && data.author == 'admin'){
+         socket.emit('message', {'text': clients, 'author': 'server'});
+         
+      }
    });
-   socket.broadcast.emit('test', clients);
 });
 
 server.listen(process.env.PORT || 5000, function() {
