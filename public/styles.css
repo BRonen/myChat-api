@@ -30,8 +30,10 @@ body {
     border-right: 1px solid #1d1d1d;
     border-top: 1px solid #1a1a1a;
     border-radius: 10px;
-    max-height: 55vh;
     overflow: auto;
+}
+#chat{
+    height: 60vh;
 }
 ::-webkit-scrollbar {
     width: 3px;
@@ -71,7 +73,7 @@ button:hover {
     box-sizing: border-box;
     width: 100%;
 }
-.sender textarea{
+.sender textarea {
     font-size: 140%;
     height: 70px;
 }

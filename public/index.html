@@ -1,34 +1,74 @@
 <!DOCTYPE html>
 <html>
    <head>
-      <title>Hello world</title>
+      <meta charset="utf-8"/>
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <meta name="theme-color" content="#222222" />
+      <meta
+        name="description"
+        content="Web chat created using socket.io"
+      />
+      
+      <title>Bug chat</title>
+      
+      <link rel="icon" href="./favicon.ico" />
       <link rel="stylesheet" type="text/css" href="styles.css"/>
 
    <script src="../socket.io/socket.io.js"></script>
    <script>
       var socket = io();
+      var Groom = "default";
+      function getIn(){
+         var room = document.getElementById('room').value || "default";
+         document.getElementById('name').innerHTML = room;
+         document.getElementById('chat').innerHTML += '<center><p class="mssg">server: now you are on '+room+'</p></center>';
+         Groom = room;
+         socket.emit('get', room)
+      }
+      
       socket.on('message', function(data){
 	 console.log(data);
-	 var a = '<p class="mssg">'+data.author+': '+data.text+'</p>';
-         document.getElementById('chat').innerHTML += a;
+	 if(data.text){
+            if(data.author == 'server'){
+               var a = '<center><p class="mssg">'+data.author+': '+data.text+'</p></center>';
+            }else{
+	       var a = '<p class="mssg">'+data.author+': '+data.text+'</p>';
+            }
+            document.getElementById('chat').innerHTML += a;
+         }
       });
+      socket.on('clear', function(){
+         document.getElementById('chat').innerHTML = '<center><h1 class="mssg" id="name">Room: '+Groom+'</h1></center>';
+         document.getElementById('chat').innerHTML += '<center><p class="mssg">Server: This chat have been cleared</p></center>';
+      });
+      
       function sendMessage(){
          const author = document.getElementById("user").value;
          const text = document.getElementById("text").value;
-         socket.emit('send', {author, text});
+         if(text){
+            socket.emit('send', {'author': author, 'text': text});
+         }
       }
    </script>
    
    </head>
    <body>
-      <div id='chat' class='content-box'></div>
+      <div id='chat' class='content-box'>
+          <center><h1 class="mssg" id="name">default</h1></center>
+          <center><p class="mssg">Server: This chat have been cleared</p></center>
+      </div>
 
       <div class='sender content-box'>
           <input class='message-input' id='user' type="text" placeholder="User:" />
           
           <textarea class='message-input' id='text' type="text" placeholder="Text:"></textarea>
           
-          <button onClick='sendMessage()'>send</button>
+          <button onClick='sendMessage()'>enter</button>
+      </div>
+      
+      <div class='rooms content-box'>
+         <input class='message-input' id='room' type="text" placeholder="Channel:" />
+         <button onClick='getIn()'>Join</button>
       </div>
    </body>
 </html>
