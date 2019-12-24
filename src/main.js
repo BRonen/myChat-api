@@ -46,7 +46,7 @@ io.on('connection', function(socket) {
    }else{
       clients[room] += 1;
       console.log(clients);
-      messages[room].map(msg => socket.emit('message', msg));
+      messages[room].map(msg => socket.emit('message', {'text': html(msg.text), 'author': html(msg.author)}));
    }
 
 
@@ -77,13 +77,13 @@ io.on('connection', function(socket) {
          clients[nRoom] = 1;
          console.log(clients);
          io.sockets.emit('counter', clients[nRoom]);
-         messages[nRoom].map(msg => socket.emit('message', msg));
+         messages[nRoom].map(msg => socket.emit('message', {'text': html(msg.text), 'author': html(msg.author)}));
       }else{
          clients[room] -= 1;
          clients[nRoom] += 1;
          console.log(clients);
          io.sockets.emit('counter', clients[room]);
-         messages[nRoom].map(msg => socket.emit('message', msg));
+         messages[nRoom].map(msg => socket.emit('message', {'text': html(msg.text), 'author': html(msg.author)}));
       }
       room = nRoom;
    });
